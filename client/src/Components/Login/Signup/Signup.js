@@ -1,30 +1,32 @@
 import React,{useState} from 'react';
+import axios from 'axios'
 import './Signup.css';
 const Signup=()=>{
-    const [Userid, SetUserid] = useState("");
-    const [Password, Setpassword] = useState("");
-    const [cpass,setcpass] = useState("");  
-    const HandelUser = (event) => {
-      SetUserid(event.target.value);
-    };
-    const HandelPass =(event)=>{
-      Setpassword(event.target.value);
-    }
-    const HandelcPass=(event)=>{
-        setcpass(event.target.value);
-    }
-    const handelSubmit =(event)=>{
+    const [form,setForm]=useState([])
+
+    const handleChange=(e)=>setForm({...form,[e.target.name]:e.target.value})
+
+    const handelSubmit =async(event)=>{
       event.preventDefault();
+      // console.log(form);
+      const{user,password,email}=form
       const bucket={
-          userid:Userid,
-          password:Password
+          
+          user:user,
+          password:password,
+          email:email
       }
-      if(Password===cpass){
-          console.log(bucket);
+      if(form.cpassword===bucket.password){
+        const {data}=await axios.post('http://localhost/login',bucket)
+        
+        if(data.message==="success")
+          alert("You've Signed Up !")
+        else
+          alert("You've Not Signed Up !")
       }
       else{
       console.log("Confirm Password is not same as Password !!");
-      setcpass('');
+      // setcpass('');
       }
     }
     return (
@@ -33,29 +35,42 @@ const Signup=()=>{
           <form onSubmit={handelSubmit}>
             <div className="input-field">
               <input
+                name="user"
                 className='input'
                 type="text"
-                placeholder="UserId/Email"
-                onChange={HandelUser}
+                placeholder="Username"
+                onChange={handleChange}
                 required
               />
             </div>
             <div className="input-field">
               <input
+                name="email"
+                className='input'
+                type="text"
+                placeholder="Email"
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className="input-field">
+              <input
+                name="password"
                 className='input'
                 type="password"
                 placeholder="Password"
-                onChange={HandelPass}
+                onChange={handleChange}
                 required
               />
             </div>
             <div className="input-field">
               <input
-              className='input'
-                type="text"
+                className='input'
+                name="cpassword"
+                type="password"
                 id="text"
                 placeholder="Confirm Password"
-                onChange={HandelcPass}
+                onChange={handleChange}
                 required
               />
             </div>

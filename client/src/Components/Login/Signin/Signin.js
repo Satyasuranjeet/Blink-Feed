@@ -1,22 +1,28 @@
 import "./Signin.css";
 import React, { useState } from "react";
+import axios from 'axios'
 const Signin = () => {
-  const [Userid, SetUserid] = useState("");
-  const [Password, Setpassword] = useState("");
-
-  const HandelUser = (event) => {
-    SetUserid(event.target.value);
-  };
-  const HandelPass =(event)=>{
-    Setpassword(event.target.value);
+  const[form,setForm]=useState([])
+  
+  const handleChange=(e)=>{
+    setForm({...form,[e.target.name]:e.target.value})
   }
-  const handelSubmit =(event)=>{
+  const handelSubmit =async(event)=>{
     event.preventDefault();
+    const {user,password}=form;
     const bucket={
-        userid:Userid,
-        password:Password
+        user:user,
+        password:password
     }
     console.log(bucket);
+    try {
+      const{data}=await axios.post("http://localhost/login/auth",bucket)
+      console.log(data);
+      if(data.message==="authorized")
+        alert("Logged in succeessfully !")
+    } catch (error) {
+      alert("Something Went Wrong !");
+    }
   }
   return (
     <div className="box">
@@ -24,21 +30,23 @@ const Signin = () => {
         <form onSubmit={handelSubmit}>
           <div className="input-field">
             <input
-            className='input'
+              name="user"
+              className='input'
               type="text"
               id="username"
               placeholder="UserId/Email"
-              onChange={HandelUser}
+              onChange={handleChange}
               required
             />
           </div>
           <div className="input-field">
             <input
-            className='input'
+              name="password"
+              className='input'
               type="password"
               id="password"
               placeholder="Password"
-              onChange={HandelPass}
+              onChange={handleChange}
               required
             />
           </div>
