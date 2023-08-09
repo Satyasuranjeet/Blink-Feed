@@ -1,13 +1,11 @@
 const User=require("../models/user")
 const bcrypt=require('bcrypt')
 const postData=async (req,res)=>{
-	const { name, email, password, phone } = req.body;
+	const { user, email, password } = req.body;
 	const data={
-		name:name,
+		user:user,
 		email:email,
 		password:password,
-		phone:phone
-
 }
 try {
 	let salt=await bcrypt.genSalt()
@@ -17,7 +15,7 @@ try {
 	await user.save() 
 	res.json({message:"success",user:user});
 } catch (error) {
-	// res.send("Not added Successfully !")
+	// res.send("Not added Successfully !") 
 	console.log(error);
 	res.json({message:"failure"});
 }
@@ -25,16 +23,19 @@ try {
 }
 
 const authData=async(req,res)=>{
-	const{name,password}=req.body
+	const{user,password}=req.body
+	// console.log(req.body);
 	try {
 		
 		
-		const user =await User.findOne({name:name});
-		let auth=await bcrypt.compare(password,user.password)
+		const UserData =await User.findOne({user:user});
+		// console.log(UserData);
+		let auth=await bcrypt.compare(password,UserData.password)
+		// console.log(auth);
 		if(user){
 
 			if(!auth){
-				 res.json({message:"Wrong Credentials !"});
+				 res.json({message:"Wrong Credentials !"}); 
 			}
 			else	
 			res.json({message:"authorized"});
