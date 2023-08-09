@@ -1,0 +1,14 @@
+.toggle{
+
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background-color: #2f00ff;
+    font-weight: bold;
+    letter-spacing: 1.3px;
+    color: #ffffff;
+    font-size: 18px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
